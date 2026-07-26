@@ -241,10 +241,23 @@ streamlit run app.py
 Add screenshots here.
 
 - Home Page
+  
+<img width="400" height="200" alt="Screenshot 2026-07-26 151559" src="https://github.com/user-attachments/assets/40aa5952-6789-4922-a343-61736040bd1d" />
+
+
 - Chat Interface
-- Agent Dashboard
+  
+<img width="400" height="200" alt="Screenshot 2026-07-26 150713" src="https://github.com/user-attachments/assets/68a02a9a-d21c-4467-a6e9-a37210fe57ac" />
+
+
 - RAG Search
+  
+<img width="700" height="100" alt="Screenshot 2026-07-26 150943" src="https://github.com/user-attachments/assets/66fd5958-40ff-479d-a151-37cc53b75f0d" />
+
+
 - PDF Upload
+  
+<img width="200" height="400" alt="Screenshot 2026-07-26 150818" src="https://github.com/user-attachments/assets/24beaca4-9c3e-47dd-b48b-748fbab037bd" />
 
 ---
 
