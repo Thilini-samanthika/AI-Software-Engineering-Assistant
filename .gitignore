@@ -1,0 +1,13 @@
+venv/
+
+.env
+
+__pycache__/
+
+*.pyc
+
+chroma_db/
+
+.streamlit/secrets.tomlv
+
+uploaded_db/

@@ -1,114 +1,155 @@
-# 🤖 AI Software Engineering Assistant
+#  AI Software Engineering Assistant
 
-> A Multi-Agent AI System for Software Developers built with LangGraph, LangChain, Groq, ChromaDB, and Streamlit.
+> A Multi-Agent AI System for Software Developers built using **LangGraph, LangChain, RAG, ChromaDB, Groq LLM, and Streamlit**.
 
----
-
-## 📖 Project Overview
-
-AI Software Engineering Assistant is an intelligent multi-agent system designed to help software developers with day-to-day software engineering tasks.
-
-Instead of searching across multiple websites such as Python Docs, Microsoft Learn, GitHub Docs, Stack Overflow, and other documentation sources, developers can ask questions through a single AI assistant.
-
-The system uses multiple specialized AI agents, Retrieval-Augmented Generation (RAG), and a Reflection Agent to generate accurate and well-structured responses.
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![LangGraph](https://img.shields.io/badge/LangGraph-Multi--Agent-success)
+![Streamlit](https://img.shields.io/badge/Streamlit-Frontend-red)
+![Groq](https://img.shields.io/badge/Groq-LLM-orange)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 ---
 
-## 🚀 Features
+#  Project Overview
 
-### 💻 Coding Agent
-- Explain source code
-- Debug errors
-- Suggest bug fixes
-- Optimize code
-- Generate Unit Tests
-- Explain algorithms
+AI Software Engineering Assistant is a Multi-Agent AI application that helps software developers with coding, debugging, software engineering concepts, documentation generation, architecture recommendations, code reviews, and intelligent documentation search using Retrieval-Augmented Generation (RAG).
 
-### 📄 Documentation Agent
-- Generate README files
-- Generate API Documentation
-- Generate Function Comments
-- Create Project Documentation
-
-### 📚 RAG Agent
-- Search Software Engineering documentation
-- Retrieve relevant knowledge
-- Answer questions using PDF knowledge base
-
-### 🧠 Reflection Agent
-- Review generated answers
-- Improve response quality
-- Verify correctness before returning the final answer
+Instead of searching across multiple websites, developers can ask questions in one place and receive AI-powered answers.
 
 ---
 
-## 🏗️ Multi-Agent Architecture
+#  Features
 
-```text
-                User
-                  │
-          Streamlit Interface
-                  │
+-  Explain source code
+-  Debug programming errors
+-  Software engineering documentation search (RAG)
+-  Generate README files
+-  Generate API documentation
+-  Generate Unit Tests
+-  System Architecture Recommendations
+-  AI Code Review
+-  Upload PDF Knowledge Base
+-  Search uploaded documents
+-  Reflection Agent for answer improvement
+
+---
+
+#  Multi-Agent Architecture
+
+```
+                  User
+                    │
+             Streamlit UI
+                    │
              Router Agent
-                  │
-     ┌──────────┼──────────┐
-     ▼          ▼          ▼
- Coding     Documentation   RAG
-  Agent        Agent       Agent
-      \          |          /
-       \         |         /
-        ▼        ▼        ▼
-        Reflection Agent
-               │
-        Final Response
+                    │
+    ┌────────┬──────────┬─────────────┐
+    │        │          │             │
+ Coding   Documentation  RAG   Architecture
+ Agent      Agent       Agent      Agent
+    │
+ Testing Agent
+    │
+ Code Review Agent
+    │
+ Reflection Agent
+    │
+          Final Response
 ```
 
 ---
 
-## 🤖 Agentic AI Patterns
+#  Agent Overview
 
-This project implements multiple Agentic AI patterns:
-
-- ✅ Router Pattern
-- ✅ ReAct Pattern
-- ✅ Tool Use
-- ✅ Reflection Pattern
-
----
-
-## 🛠️ Technologies Used
-
-| Category | Technology |
-|----------|------------|
-| Language | Python |
-| Frontend | Streamlit |
-| Multi-Agent | LangGraph |
-| LLM Framework | LangChain |
-| Model | Groq (Llama 3.1) |
-| Embeddings | Sentence Transformers |
-| Vector Database | ChromaDB |
-| PDF Loader | PyPDFLoader |
-| Environment | python-dotenv |
-| Version Control | Git & GitHub |
+| Agent | Responsibility |
+|--------|---------------|
+| Router Agent | Selects the correct agent |
+| Coding Agent | Code explanation & debugging |
+| Documentation Agent | README & API documentation |
+| RAG Agent | Searches knowledge base |
+| Testing Agent | Generates unit tests |
+| Architecture Agent | Recommends software architecture |
+| Code Review Agent | Reviews code quality |
+| Reflection Agent | Improves final response |
 
 ---
 
-## 📁 Project Structure
+#  Knowledge Base
 
-```text
+The assistant uses a ChromaDB vector database containing software engineering documentation.
+
+Current documents include:
+
+- Python
+- Java
+- C#
+- SQL
+- SOLID Principles
+- Object-Oriented Programming
+- Design Patterns
+- Clean Code
+- REST API
+- Git
+- GitHub
+- Docker
+- Kubernetes
+- Agile
+- Scrum
+- CI/CD
+- Microservices
+- Refactoring
+- Software Architecture
+- Unit Testing
+
+---
+
+#  Technologies Used
+
+## Frontend
+
+- Streamlit
+
+## Backend
+
+- Python
+
+## AI Framework
+
+- LangGraph
+- LangChain
+
+## Large Language Model
+
+- Groq (Llama 3)
+
+## Vector Database
+
+- ChromaDB
+
+## Embeddings
+
+- Sentence Transformers
+
+## Document Loader
+
+- PyPDFLoader
+
+---
+
+#  Project Structure
+
+```
 AI-Software-Engineering-Assistant/
 
-│── app.py
-│── requirements.txt
-│── README.md
-│── .env
-│── .gitignore
 │
 ├── agents/
 │   ├── router.py
 │   ├── coding_agent.py
 │   ├── documentation_agent.py
 │   ├── rag_agent.py
+│   ├── testing_agent.py
+│   ├── architecture_agent.py
+│   ├── code_review_agent.py
 │   └── reflection_agent.py
 │
 ├── graph/
@@ -123,64 +164,44 @@ AI-Software-Engineering-Assistant/
 │   ├── splitter.py
 │   ├── embeddings.py
 │   ├── retriever.py
-│   └── vector_store.py
+│   ├── vector_store.py
+│   └── upload_loader.py
 │
 ├── data/
-│   └── pdfs/
+│   ├── pdfs/
+│   └── uploads/
 │
-└── chroma_db/
+├── assets/
+│
+├── app.py
+├── requirements.txt
+├── README.md
+└── .env
 ```
 
 ---
 
-## 📚 Knowledge Base
+#  Installation
 
-The RAG system uses Software Engineering documents including:
-
-- Python Documentation
-- C# Documentation
-- Java Documentation
-- SOLID Principles
-- OOP Notes
-- Clean Code
-- Design Patterns
-- REST API Guide
-- Git Documentation
-- GitHub Documentation
-- SQL Notes
-- Unit Testing Guide
-- Agile Guide
-- Scrum Guide
-- Software Architecture
-- Refactoring Guide
-- Docker Basics
-- Kubernetes Basics
-- Microservices
-- CI/CD Notes
-
----
-
-## ⚙️ Installation
-
-### 1. Clone the repository
+Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/AI-Software-Engineering-Assistant.git
+git clone https://github.com/Thilini-samanthika/AI-Software-Engineering-Assistant.git
 ```
 
-### 2. Move into the project
+Go to the project
 
 ```bash
 cd AI-Software-Engineering-Assistant
 ```
 
-### 3. Create a virtual environment
+Create virtual environment
 
 ```bash
 python -m venv venv
 ```
 
-### 4. Activate the virtual environment
+Activate virtual environment
 
 Windows
 
@@ -188,32 +209,26 @@ Windows
 venv\Scripts\activate
 ```
 
-Linux / macOS
-
-```bash
-source venv/bin/activate
-```
-
-### 5. Install dependencies
+Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 6. Create a `.env` file
+---
 
-```env
-GROQ_API_KEY=your_api_key_here
-OPENROUTER_API_KEY=your_api_key_here
+#  Environment Variables
+
+Create a `.env` file.
+
+```
+GROQ_API_KEY=your_api_key
+OPENROUTER_API_KEY=your_api_key
 ```
 
-### 7. Build the Vector Database
+---
 
-```bash
-python test_rag.py
-```
-
-### 8. Run the application
+#  Run the Project
 
 ```bash
 streamlit run app.py
@@ -221,61 +236,64 @@ streamlit run app.py
 
 ---
 
-## 💬 Example Questions
+#  Application Screenshots
 
-- Explain SOLID Principles
-- Explain the Singleton Design Pattern
-- Generate a README for my project
-- Debug my Python code
-- Explain this C# code
-- Generate Unit Tests
-- Explain REST API
-- What is Dependency Injection?
+Add screenshots here.
 
----
-
-## 📸 Screenshots
-
-### Home Page
-
-_Add a screenshot here_
-
-### Chat Interface
-
-_Add a screenshot here_
-
-### Agent Dashboard
-
-_Add a screenshot here_
-
-### Retrieved Documents
-
-_Add a screenshot here_
-
----
-
-## 🌟 Future Improvements
-
-- Multiple LLM Support
+- Home Page
+- Chat Interface
+- Agent Dashboard
+- RAG Search
 - PDF Upload
-- Conversation Memory
-- User Authentication
-- Voice Input
-- AI Code Review
-- Docker Deployment
-- Cloud Deployment
-- Feedback System
 
 ---
 
-## 👩‍💻 Author
+#  Example Questions
+
+```
+Explain SOLID principles.
+
+Review this Python code.
+
+Generate a README for my project.
+
+Generate unit tests for this function.
+
+Design a Hospital Management System.
+
+Explain the Repository Pattern.
+
+Search Docker documentation.
+
+Summarize the uploaded PDF.
+```
+
+---
+
+#  Future Improvements
+
+- Voice Assistant
+- AI Pair Programming
+- Multiple LLM Support
+- Code Execution Sandbox
+- UML Diagram Generation
+- Database Schema Generator
+- Docker Deployment
+- Authentication
+
+---
+
+#  Developer
 
 **Thilini Samanthika**
 
 Software Engineering Student
 
+GitHub:
+https://github.com/Thilini-samanthika
+
 ---
 
-## 📄 License
+#  License
 
-This project is developed for educational purposes.
+This project is developed for educational purposes and internship portfolio demonstrations.
