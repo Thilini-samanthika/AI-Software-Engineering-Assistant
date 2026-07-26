@@ -16,7 +16,6 @@ torch==2.8.0
 groq==0.31.1
 
 pypdf==6.0.0
-streamlit-mic-recorder
 
 python-dotenv==1.1.1
 
@@ -53,3 +52,5 @@ aiohttp==3.12.15
 gTTS==2.5.4
 
 SpeechRecognition==3.14.3
+
+streamlit-mic-recorder==0.0.8
