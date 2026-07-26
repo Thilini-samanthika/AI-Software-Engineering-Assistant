@@ -4,10 +4,11 @@ from rag.embeddings import get_embeddings
 from rag.vector_store import create_vector_store
 
 
-docs = load_documents(
-    "data/pdfs/python.pdf"
-)
+from rag.loader import load_all_documents
 
+docs = load_all_documents(
+    "data/pdfs"
+)
 
 chunks = split_documents(docs)
 

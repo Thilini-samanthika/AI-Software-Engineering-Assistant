@@ -1,13 +1,22 @@
 import os
 
-documents=[]
+from langchain_community.document_loaders import PyPDFLoader
 
-folder="data/pdfs"
 
-for file in os.listdir(folder):
+def load_all_documents(folder):
 
-    if file.endswith(".pdf"):
+    documents = []
 
-        path=os.path.join(folder,file)
+    for root, dirs, files in os.walk(folder):
 
-        documents.extend(load_documents(path))
+        for file in files:
+
+            if file.endswith(".pdf"):
+
+                path = os.path.join(root, file)
+
+                loader = PyPDFLoader(path)
+
+                documents.extend(loader.load())
+
+    return documents
