@@ -16,6 +16,7 @@ torch==2.8.0
 groq==0.31.1
 
 pypdf==6.0.0
+streamlit-mic-recorder
 
 python-dotenv==1.1.1
 
