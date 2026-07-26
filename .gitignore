@@ -1,13 +1,8 @@
 venv/
-
-.env
-
 __pycache__/
-
 *.pyc
-
+.env
 chroma_db/
-
-.streamlit/secrets.tomlv
-
 uploaded_db/
+data/uploads/
+.streamlit/secrets.tomlv
