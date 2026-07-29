@@ -9,6 +9,19 @@
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 ---
+# Live demo link:
+https://ai-software-engineering-assistant-ngsqmt5gnqkl3sa2psvwks.streamlit.app/
+
+---
+
+#  Developer
+
+**M.Thilini Samanthika** - **ITBIN-2313-0061**
+
+GitHub:
+https://github.com/Thilini-samanthika
+
+---
 
 #  Project Overview
 
@@ -293,17 +306,6 @@ Summarize the uploaded PDF.
 - Database Schema Generator
 - Docker Deployment
 - Authentication
-
----
-
-#  Developer
-
-**Thilini Samanthika**
-
-Software Engineering Student
-
-GitHub:
-https://github.com/Thilini-samanthika
 
 ---
 
