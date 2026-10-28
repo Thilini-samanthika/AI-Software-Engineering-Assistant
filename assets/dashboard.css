@@ -1,0 +1,118 @@
+
+:root {
+    --bg: #080f1d;
+    --sidebar: #0c1729;
+    --card: #121f33;
+    --border: #283a52;
+    --accent: #48c9ee;
+    --text: #f1f6ff;
+    --muted: #9fb0c9;
+}
+
+.stApp {
+    background: var(--bg) !important;
+    color: var(--text);
+}
+
+[data-testid="stAppViewContainer"] {
+    background: var(--bg) !important;
+}
+
+[data-testid="stHeader"] {
+    background: transparent !important;
+}
+
+.block-container {
+    max-width: 1500px;
+    padding-top: 2rem;
+    padding-bottom: 6rem;
+}
+
+section[data-testid="stSidebar"] {
+    background: var(--sidebar) !important;
+    border-right: 1px solid var(--border);
+}
+
+section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] {
+    color: var(--text);
+}
+
+div[data-testid="stExpander"] {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+div[data-testid="stMetric"] {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+}
+
+.stButton > button {
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all .2s ease;
+}
+
+.stButton > button:hover {
+    border-color: var(--accent);
+}
+
+.stTextInput input,
+.stTextArea textarea {
+    background: #101c2e !important;
+    color: var(--text) !important;
+    border: 1px solid var(--border) !important;
+}
+
+div[data-testid="stCodeBlock"] {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+h1, h2, h3 {
+    color: var(--text);
+}
+
+[data-testid="stChatInput"] {
+    background: #0c1729;
+}
+
+.studio-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 22px 26px;
+    margin-bottom: 24px;
+    background: linear-gradient(120deg, #142b46, #0d1c30);
+    border: 1px solid #294662;
+    border-radius: 18px;
+}
+
+.studio-icon {
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    flex-shrink: 0;
+    border-radius: 16px;
+    background: #123b55;
+    color: #6ae4ff;
+    font-size: 32px;
+}
+
+.studio-header h1 {
+    margin: 0;
+    font-size: clamp(24px, 3vw, 38px);
+    font-weight: 750;
+}
+
+.studio-header p {
+    margin: 5px 0 0;
+    color: #a7bdd7;
+}

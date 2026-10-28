@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Live Interview Studio</title>
+<style>
+:root{font-family:Inter,system-ui,Arial,sans-serif;color:#eaf3ff;background:#081324}*{box-sizing:border-box}body{margin:0}.wrap{max-width:920px;margin:36px auto;padding:0 20px}h1{margin:0;font-size:30px}p,.hint{color:#a6bbd3}.panel{background:#111f34;border:1px solid #2a405e;border-radius:16px;padding:22px;margin-top:18px}.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}label{display:grid;gap:8px;flex:1;min-width:180px;color:#c8d9ec}select{padding:11px;border-radius:9px;background:#0c1729;color:white;border:1px solid #36506d}button{padding:12px 18px;border-radius:10px;background:#1679c7;color:white;border:0;cursor:pointer;font-weight:600}button:disabled{opacity:.4;cursor:not-allowed}.danger{background:#9e344a}.secondary{background:#263c58}.status{margin-top:14px;color:#83dff4}.log{height:320px;overflow-y:auto;background:#09172a;border-radius:12px;padding:16px}.entry{padding:10px 12px;border-radius:10px;margin-bottom:10px;background:#1b2e48;line-height:1.5;white-space:pre-wrap}.entry.user{background:#173b43}.tag{font-size:12px;color:#7dd9f2;font-weight:700;display:block;margin-bottom:5px}.note{font-size:13px;color:#b1c5db}.preview{background:#0b2431;padding:12px;border-radius:10px;margin-top:12px;min-height:42px;white-space:pre-wrap}
+</style>
+</head>
+<body><div class="wrap"><h1> AI Live Interview Studio</h1><p>Practice a realistic interview, one question at a time.</p>
+<div class="panel"><div class="row">
+<label>Target role<select id="role"><option>Software Engineering Intern</option><option>Junior Software Engineer</option><option>QA Engineer Intern</option><option>Frontend Developer Intern</option><option>Backend Developer Intern</option><option>project mamager intern</option></select></label>
+<label>Mode<select id="mode"><option>Mock Interview</option><option>Guided Coaching</option><option>HR Interview</option><option>Technical Interview</option></select></label>
+<label>Language<select id="language"><option value="en-US">English</option><option value="si-LK">Sinhala (experimental)</option></select></label>
+</div><div class="row" style="margin-top:20px">
+<button id="start">Start Interview</button><button class="danger" id="stop" disabled>End Interview</button><button class="secondary" id="repeat" disabled>Repeat Question</button><button class="secondary" id="mute" disabled>Mute Mic</button><button class="secondary" id="submit" disabled>I'm Done Answering</button>
+</div><div class="status" id="status" role="status">Ready — use Chrome or Edge and allow microphone access.</div>
+<p class="note">The microphone waits for 4.5 seconds of silence before submitting. For long answers, keep pauses shorter or use the “I'm Done Answering” button. Browser speech recognition may send audio to its provider. Use headphones to prevent speaker echo.</p>
+<div class="preview" id="preview" aria-live="polite">Your recognized speech will appear here.</div></div>
+<div class="panel"><h3>Live Transcript</h3><div class="log" id="log" aria-live="polite"></div></div></div>
+<script>
+'use strict';
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const $=id=>document.getElementById(id);
+const SILENCE_MS=4500;
+
+let ws=null,rec=null,active=false,muted=false,waiting=false,speaking=false,finished=false;
+let recognitionRunning=false,recognitionStarting=false,suppressUntil=0,answerTimer=null,restartTimer=null;
+let committed='',results=new Map(),lastHeardAt=0,lastSnapshot='',lastQuestion='',pendingAnswer='';
+
+const status=t=>$('status').textContent=t;
+
+function add(who,txt){const d=document.createElement('div');d.className='entry '+(who==='You'?'user':'');const s=document.createElement('span');s.className='tag';s.textContent=who;d.append(s,document.createTextNode(txt));$('log').append(d);$('log').scrollTop=$('log').scrollHeight;}
+function setButtons(){ $('start').disabled=active;$('stop').disabled=!active;$('repeat').disabled=!active||!lastQuestion;$('mute').disabled=!active||finished;$('submit').disabled=!active||waiting||speaking||finished||!currentAnswer();$('mute').textContent=muted?'Unmute Mic':'Mute Mic'; }
+function send(obj){if(ws&&ws.readyState===WebSocket.OPEN){ws.send(JSON.stringify(obj));return true;}return false;}
+function clearTimers(){if(answerTimer)clearTimeout(answerTimer);if(restartTimer)clearTimeout(restartTimer);answerTimer=null;restartTimer=null;}
+function normalize(s){return String(s||'').replace(/\s+/g,' ').trim();}
+function partial(){return [...results.entries()].sort((a,b)=>a[0]-b[0]).map(([,v])=>normalize(v.text)).filter(Boolean).join(' ');}
+function currentAnswer(){return normalize([committed,partial()].filter(Boolean).join(' '));}
+function updatePreview(){const t=currentAnswer();$('preview').textContent=t||'Your recognized speech will appear here.';setButtons();}
+function resetAnswer(){committed='';results.clear();lastSnapshot='';lastHeardAt=0;pendingAnswer='';updatePreview();}
+function finalizeRecognitionChunk(){const text=partial();if(text)committed=normalize([committed,text].join(' '));results.clear();lastSnapshot=currentAnswer();updatePreview();}
+function stopRecognition(abort=false){if(!rec)return;try{abort?rec.abort():rec.stop()}catch(e){}}
+function scheduleSubmit(){if(answerTimer)clearTimeout(answerTimer);if(!active||waiting||speaking||muted||finished||!currentAnswer())return;answerTimer=setTimeout(()=>{answerTimer=null;if(!active||waiting||speaking||muted||finished)return;const remaining=SILENCE_MS-(Date.now()-lastHeardAt);if(remaining>0){scheduleSubmit();return;}submitAnswer();},SILENCE_MS);}
+function submitAnswer(){if(!active||waiting||speaking||finished)return;const answer=currentAnswer();if(!answer)return;clearTimers();waiting=true;pendingAnswer=answer;stopRecognition(true);resetAnswer();if(!send({type:'answer',text:answer,role:$('role').value,mode:$('mode').value,language:$('language').selectedOptions[0].text})){waiting=false;committed=answer;updatePreview();status('Connection unavailable. Your answer is preserved.');return;}add('You',answer);status('AI is reviewing your answer...');setButtons();}
+function listen(){if(!active||muted||waiting||speaking||finished||!rec||recognitionRunning||recognitionStarting)return;recognitionStarting=true;try{rec.lang=$('language').value;rec.start();status('Listening — take your time.');}catch(e){recognitionStarting=false;}}
+function queueListen(){if(restartTimer)clearTimeout(restartTimer);restartTimer=setTimeout(()=>{restartTimer=null;listen();},500);}
+function say(text){if(!active||finished)return;clearTimers();stopRecognition(true);speaking=true;status('AI interviewer speaking...');window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=$('language').value;u.rate=.93;const done=()=>{speaking=false;suppressUntil=Date.now()+650;setTimeout(()=>{if(active&&!finished){status('Your turn — please answer.');listen();}},700);};u.onend=done;u.onerror=done;window.speechSynthesis.speak(u);}
+function stopAll(){active=false;waiting=false;speaking=false;finished=false;muted=false;clearTimers();resetAnswer();window.speechSynthesis.cancel();stopRecognition(true);if(ws){ws.close();ws=null;}setButtons();status('Interview ended.');}
+function initRecognition(){if(!SR){status('Speech recognition unavailable. Try Chrome or Edge.');return false;}rec=new SR();rec.lang=$('language').value;rec.continuous=true;rec.interimResults=true;
+rec.onstart=()=>{recognitionRunning=true;recognitionStarting=false;};
+rec.onresult=e=>{if(!active||muted||waiting||speaking||finished||Date.now()<suppressUntil)return;
+for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i];results.set(i,{text:r[0].transcript,final:r.isFinal});}
+const snapshot=currentAnswer();if(snapshot&&snapshot!==lastSnapshot){lastSnapshot=snapshot;lastHeardAt=Date.now();status('Listening — answer captured; continue speaking or pause to finish.');updatePreview();scheduleSubmit();}
+};
+rec.onerror=e=>{recognitionStarting=false;if(!active)return;if(e.error==='not-allowed'||e.error==='service-not-allowed'){stopAll();status('Microphone/speech recognition permission denied.');}else if(e.error==='network'){status('Speech recognition network error. Check connection.');}else if(!['no-speech','aborted'].includes(e.error)){status('Speech recognition: '+e.error);}};
+rec.onend=()=>{recognitionRunning=false;recognitionStarting=false;if(!active||muted||waiting||speaking||finished)return;finalizeRecognitionChunk();if(currentAnswer()){if(!lastHeardAt)lastHeardAt=Date.now();scheduleSubmit();}queueListen();};return true;}
+$('start').onclick=()=>{if(active||!initRecognition())return;active=true;muted=false;waiting=true;speaking=false;finished=false;lastQuestion='';resetAnswer();clearTimers();$('log').replaceChildren();setButtons();const scheme=location.protocol==='https:'?'wss':'ws';ws=new WebSocket(`${scheme}://${location.host}/ws`);ws.onopen=()=>{status('Connecting to interviewer...');send({type:'start',role:$('role').value,mode:$('mode').value,language:$('language').selectedOptions[0].text});};ws.onmessage=e=>{const d=JSON.parse(e.data);if(d.type==='reply'){waiting=false;pendingAnswer='';add('AI Interviewer',d.text);if(d.decision==='finish'){finished=true;clearTimers();stopRecognition(true);window.speechSynthesis.cancel();speaking=true;status('Interview completed.');const u=new SpeechSynthesisUtterance(d.text);u.lang=$('language').value;u.onend=()=>{speaking=false;setButtons();};u.onerror=()=>{speaking=false;setButtons();};window.speechSynthesis.speak(u);setButtons();return;}lastQuestion=d.text;say(d.text);}else if(d.type==='thinking'){status('AI is evaluating your answer...');}else if(d.type==='error'){waiting=false;if(pendingAnswer){committed=pendingAnswer;pendingAnswer='';updatePreview();}status(d.message+' Your answer is preserved. Click “I\'m Done Answering” to retry.');setButtons();}};ws.onerror=()=>status('Connection error. Check local interview server.');ws.onclose=()=>{if(active)stopAll();};};
+$('stop').onclick=stopAll;
+$('repeat').onclick=()=>{if(!lastQuestion||!active||finished)return;clearTimers();stopRecognition(true);say(lastQuestion);};
+$('mute').onclick=()=>{if(!active||finished)return;muted=!muted;if(muted){clearTimers();stopRecognition(true);status('Microphone muted.');}else{status('Microphone enabled.');queueListen();}setButtons();};
+$('submit').onclick=submitAnswer;
+window.addEventListener('beforeunload',()=>{if(ws)ws.close();window.speechSynthesis.cancel();});
+</script>
+</body>
+</html>

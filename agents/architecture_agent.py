@@ -19,7 +19,7 @@ Provide:
 3. Folder Structure
 4. Database Design
 5. Technology Recommendation
-6. Scalability Suggestions
+6. Scalability Sugestions
 
 
 Answer professionally.

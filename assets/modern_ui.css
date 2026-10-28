@@ -1,0 +1,361 @@
+
+/* =========================================
+   AI ENGINEERING STUDIO — CYBER BLUE UI
+   ========================================= */
+
+:root {
+    --bg: #070d1b;
+    --sidebar: #0b1427;
+    --surface: #101d33;
+    --surface-hover: #172942;
+    --border: #253954;
+    --blue: #3b82f6;
+    --cyan: #22d3ee;
+    --text: #edf4ff;
+    --muted: #9eafc8;
+}
+
+/* Main app background */
+
+html,
+body,
+[data-testid="stApp"],
+.stApp {
+    background: var(--bg) !important;
+    color: var(--text) !important;
+    font-family: "Segoe UI", Inter, Arial, sans-serif;
+}
+
+/* Remove old background images */
+
+.stApp {
+    background-image: none !important;
+}
+
+/* Main content */
+
+.block-container {
+    max-width: 1320px !important;
+    padding-top: 2rem !important;
+    padding-bottom: 5rem !important;
+}
+
+/* Sidebar */
+
+[data-testid="stSidebar"] {
+    background: var(--sidebar) !important;
+    border-right: 1px solid var(--border);
+}
+
+[data-testid="stSidebar"] > div {
+    background: transparent !important;
+}
+
+[data-testid="stSidebar"] h1 {
+    color: var(--text) !important;
+    font-size: 1.6rem !important;
+    font-weight: 750 !important;
+}
+
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
+    color: var(--text) !important;
+    font-size: 1rem !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stAlert"] {
+    border-radius: 10px !important;
+    padding: 0.65rem !important;
+}
+
+/* General headings */
+
+h1,
+h2,
+h3 {
+    color: var(--text) !important;
+    letter-spacing: -0.025em;
+}
+
+h1 {
+    font-weight: 800 !important;
+}
+
+h2 {
+    font-weight: 700 !important;
+}
+
+p,
+label,
+span {
+    line-height: 1.55;
+}
+
+/* Modern header */
+
+.studio-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 26px 30px;
+    margin-bottom: 25px;
+    border: 1px solid #2a4465;
+    border-radius: 20px;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(59, 130, 246, 0.20),
+            transparent 45%
+        ),
+        linear-gradient(
+            135deg,
+            #132743 0%,
+            #0d192d 100%
+        );
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+}
+
+.studio-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+    color: #67e8f9;
+    background: rgba(34, 211, 238, 0.12);
+    font-size: 29px;
+}
+
+.studio-header h1 {
+    font-size: clamp(1.6rem, 3vw, 2.3rem) !important;
+    margin: 0 !important;
+}
+
+.studio-header p {
+    color: var(--muted) !important;
+    margin: 5px 0 0;
+    font-size: 0.95rem;
+}
+
+/* Feature expanders */
+
+[data-testid="stExpander"] {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 14px !important;
+    overflow: hidden;
+    margin-bottom: 12px;
+    transition: border-color 0.2s ease,
+                background 0.2s ease;
+}
+
+[data-testid="stExpander"]:hover {
+    border-color: #3b82f6 !important;
+    background: var(--surface-hover) !important;
+}
+
+[data-testid="stExpander"] details {
+    border: 0 !important;
+}
+
+[data-testid="stExpander"] summary {
+    padding: 10px 14px !important;
+    font-weight: 650 !important;
+    color: var(--text) !important;
+}
+
+[data-testid="stExpander"] summary:hover {
+    color: #93c5fd !important;
+}
+
+/* Buttons */
+
+.stButton > button,
+.stDownloadButton > button,
+.stLinkButton > a {
+    border-radius: 11px !important;
+    padding: 0.55rem 1.2rem !important;
+    font-weight: 650 !important;
+    min-height: 42px;
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease,
+                border-color 0.2s ease;
+}
+
+.stButton > button[kind="primary"],
+.stDownloadButton > button[kind="primary"] {
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #0891b2
+    ) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.stButton > button:hover,
+.stDownloadButton > button:hover,
+.stLinkButton > a:hover {
+    transform: translateY(-1px);
+    border-color: #60a5fa !important;
+    box-shadow: 0 5px 18px rgba(37, 99, 235, 0.16);
+}
+
+/* Input fields */
+
+.stTextInput input,
+.stTextArea textarea,
+.stChatInput textarea,
+[data-testid="stSelectbox"] > div > div {
+    background: #0b172a !important;
+    border: 1px solid #2a405d !important;
+    color: var(--text) !important;
+    border-radius: 11px !important;
+}
+
+.stTextInput input:focus,
+.stTextArea textarea:focus {
+    border-color: var(--blue) !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+/* Metrics */
+
+[data-testid="stMetric"] {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 13px;
+}
+
+[data-testid="stMetricValue"] {
+    color: #93c5fd !important;
+}
+
+/* Tabs */
+
+.stTabs [data-baseweb="tab-list"] {
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.stTabs [data-baseweb="tab"] {
+    border-radius: 9px 9px 0 0;
+    color: var(--muted);
+}
+
+/* Code blocks */
+
+[data-testid="stCodeBlock"] {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Chat */
+
+[data-testid="stChatMessage"] {
+    background: var(--surface) !important;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 12px;
+    margin-bottom: 12px;
+}
+
+/* Dividers */
+
+hr {
+    border-color: var(--border) !important;
+    opacity: 0.7;
+}
+
+/* Captions */
+
+[data-testid="stCaptionContainer"] {
+    color: var(--muted) !important;
+}
+
+/* Custom dashboard components */
+
+.dashboard-hero {
+    padding: 30px;
+    border-radius: 20px;
+    background:
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(34, 211, 238, 0.13),
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #142947,
+            #0c182b
+        );
+    border: 1px solid #2b4566;
+    margin-bottom: 22px;
+}
+
+.dashboard-hero h2 {
+    margin: 0 0 8px;
+    font-size: 1.75rem;
+}
+
+.dashboard-hero p {
+    color: var(--muted);
+    margin: 0;
+}
+
+.section-label {
+    color: #67e8f9;
+    font-size: 0.75rem;
+    font-weight: 750;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 9px;
+}
+
+.feature-card {
+    min-height: 130px;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    margin-bottom: 12px;
+}
+
+.feature-card h3 {
+    font-size: 1.05rem !important;
+    margin: 0 0 8px;
+}
+
+.feature-card p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin: 0;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+    .block-container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    .studio-header {
+        padding: 18px;
+        gap: 12px;
+    }
+
+    .studio-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 23px;
+    }
+
+    .dashboard-hero {
+        padding: 20px;
+    }
+}

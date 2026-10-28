@@ -8,10 +8,20 @@ from rag.upload_loader import load_uploaded_pdf
 from rag.upload_vector_store import create_uploaded_vector_db
 from rag.embeddings import embeddings
 from graph.workflow import graph
+from services.github_analyzer import analyze_repository
+from services.local_repo_loader import fetch_local_repository
+from services.multi_agent_analyzer import analyze_repository_multi_agent
+from services.github_analyzer import fetch_repository, analyze_repository
+from services.chunked_analyzer import analyze_repository_chunked
+from services.unit_test_generator import generate_unit_tests
+from services.multi_language_test_generator import generate_tests, FRAMEWORKS
 
+from services.code_fix_service import fix_code, explain_fix
 from streamlit_mic_recorder import mic_recorder
 import speech_recognition as sr
 from gtts import gTTS
+
+from services.universal_repo_loader import fetch_any_repository
 
 
 def load_css():
@@ -21,7 +31,16 @@ def load_css():
     with open(css_path) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
+from pathlib import Path
 
+dashboard_css = Path("assets/dashboard.css")
+
+if dashboard_css.exists():
+    st.markdown(
+        f"<style>{dashboard_css.read_text(encoding='utf-8')}</style>",
+        unsafe_allow_html=True,
+    )
+    
 def add_bg():
     bg_path = "assets/background.jpeg"
     if not os.path.exists(bg_path):
@@ -106,14 +125,35 @@ def text_to_speech(text, language="English"):
         return None
 
 
+
 st.set_page_config(
-    page_title="AI Software Engineering Assistant",
+    page_title="AI Engineering Studio",
     page_icon="",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
+
+st.markdown("""
+<div class="studio-header">
+    <div class="studio-icon">✦</div>
+    <div>
+        <h1>AI Engineering Studio</h1>
+        <p>Intelligent Software Development Workspace</p>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 load_css()
 add_bg()
+
+
+modern_css_path = Path("assets/modern_ui.css")
+
+if modern_css_path.exists():
+    st.markdown(
+        f"<style>{modern_css_path.read_text(encoding='utf-8')}</style>",
+        unsafe_allow_html=True
+    )
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -121,7 +161,18 @@ if "messages" not in st.session_state:
 os.makedirs("data/uploads", exist_ok=True)
 os.makedirs("data/audio", exist_ok=True)
 
+st.divider()
 
+st.subheader("AI Live Interview Studio")
+
+st.markdown(
+    "Practice a hands-free, two-way AI voice interview."
+)
+
+st.link_button(
+    "Open Live Interview",
+    "http://127.0.0.1:8765"
+)
 
 with st.sidebar:
 
@@ -215,6 +266,70 @@ with st.sidebar:
 
 
 
+st.markdown(
+    """
+    <div class="dashboard-hero">
+        <div class="section-label">
+            AI-POWERED DEVELOPMENT WORKSPACE
+        </div>
+
+        <h2>Welcome to AI Engineering Studio</h2>
+
+        <p>
+            Analyze repositories, improve code quality,
+            generate tests and collaborate with AI agents
+            from one intelligent workspace.
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+
+overview_col1, overview_col2, overview_col3 = st.columns(3)
+
+with overview_col1:
+    st.markdown(
+        """
+        <div class="feature-card">
+            <h3> Repository Intelligence</h3>
+            <p>
+                AI-powered repository analysis,
+                architecture review and code insights.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+with overview_col2:
+    st.markdown(
+        """
+        <div class="feature-card">
+            <h3> AI Code Studio</h3>
+            <p>
+                Debug code, review changes and
+                generate automated unit tests.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+with overview_col3:
+    st.markdown(
+        """
+        <div class="feature-card">
+            <h3> Multi-Agent Assistant</h3>
+            <p>
+                LangGraph agents, RAG knowledge
+                retrieval and voice assistance.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 
 header_col1, header_col2 = st.columns([1, 6])
 
@@ -233,11 +348,399 @@ with header_col2:
 st.divider()
 
 
+with st.expander(
+    "GitHub Repository Analyzer",
+    expanded=False,
+):
+    st.markdown(
+        "Analyze a public GitHub repository using AI."
+    )
+
+    github_url = st.text_input(
+        "GitHub Repository URL",
+        placeholder=(
+            ""
+        ),
+        key="github_repo_url",
+    )
+
+    if st.button(
+        "Analyze Repository",
+        key="analyze_github_repo",
+    ):
+        if not github_url.strip():
+            st.warning("Please enter a GitHub URL.")
+        else:
+            try:
+                with st.spinner(
+                    "Fetching repository source files..."
+                ):
+                    repo_data = fetch_any_repository(github_url)
+
+                st.success(
+                    f"Repository: {repo_data['name']}"
+                )
+
+                col1, col2, col3 = st.columns(3)
+
+                col1.metric(
+                    "Language",
+                    repo_data["language"],
+                )
+                col2.metric(
+                    "Stars",
+                    repo_data["stars"],
+                )
+                col3.metric(
+                    "Files Analyzed",
+                    len(repo_data["files"]),
+                )
+
+                with st.spinner(
+                    "AI is reviewing the repository..."
+                ):
+                    report = analyze_repository_chunked(repo_data)
+
+                st.session_state[
+                    "github_analysis_report"
+                ] = report
+
+                st.session_state[
+                    "github_analysis_repo"
+                ] = repo_data["name"]
+
+            except Exception as exc:
+                st.error(
+                    f"Repository analysis failed: {exc}"
+                )
+
+    if "github_analysis_report" in st.session_state:
+        st.subheader("AI Repository Analysis")
+
+        st.markdown(
+            st.session_state[
+                "github_analysis_report"
+            ]
+        )
+
+        st.download_button(
+            "Download Analysis Report",
+            data=st.session_state[
+                "github_analysis_report"
+            ],
+            file_name="github_analysis.md",
+            mime="text/markdown",
+        )
+
+
+with st.expander("Multi-Agent Repository Analyzer", expanded=False):
+
+    st.write(
+        "Analyze the local repository using "
+        "Architecture, Security, Code Quality and Testing agents."
+    )
+
+    if st.button("Run Multi-Agent Analysis", key="multi_agent_run"):
+
+        try:
+            with st.spinner("Loading local repository..."):
+                repo_data = fetch_local_repository(".")
+
+            repo_data["files"] = repo_data["files"][:3]
+
+            with st.spinner("Running AI review agents..."):
+                result = analyze_repository_multi_agent(repo_data)
+
+            st.session_state["multi_agent_result"] = result
+            st.session_state["multi_agent_repo"] = repo_data["name"]
+
+            st.success("Analysis completed!")
+
+        except Exception as error:
+            st.error(f"Multi-Agent Analysis Failed: {error}")
+
+    if "multi_agent_result" in st.session_state:
+
+        result = st.session_state["multi_agent_result"]
+
+        st.subheader("Repository Analysis Results")
+
+        tabs = st.tabs([
+            "Architecture",
+            "Security",
+            "Code Quality",
+            "Testing"
+        ])
+
+        for tab, name in zip(tabs, [
+            "Architecture",
+            "Security",
+            "Code Quality",
+            "Testing"
+        ]):
+            with tab:
+                st.markdown(result["reports"][name])
+
+        st.download_button(
+            "Download Full Analysis Report",
+            data=result["combined_report"],
+            file_name="multi_agent_analysis.md",
+            mime="text/markdown"
+        )
 
 
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
+
+
+with st.expander(" AI Code Fix + Diff Preview", expanded=False):
+    language = st.selectbox(
+        "Programming Language",
+        ["Python", "Java", "JavaScript", "TypeScript", "C++"],
+        key="code_fix_language",
+    )
+
+    source_code = st.text_area(
+        "Paste your source code",
+        height=250,
+        key="code_fix_source",
+    )
+
+    issue = st.text_area(
+        "Describe the issue (optional)",
+        key="code_fix_issue",
+    )
+
+    if st.button(" Analyze & Fix Code", key="run_code_fix"):
+        if not source_code.strip():
+            st.warning("Please paste source code first.")
+        else:
+            try:
+                with st.spinner("AI is reviewing your code..."):
+                    st.session_state["code_fix_result"] = fix_code(
+                        source_code,
+                        language,
+                        issue,
+                    )
+                    st.session_state["code_fix_result_language"] = language.lower()
+
+            except Exception as error:
+                st.error(f"Code fix failed: {error}")
+
+    
+    if "code_fix_result" in st.session_state:
+        result = st.session_state["code_fix_result"]
+
+        original_col, fixed_col = st.columns(2)
+
+        with original_col:
+            st.subheader("Original Code")
+            st.code(
+                result["original"],
+                language=st.session_state["code_fix_result_language"],
+            )
+
+        with fixed_col:
+            st.subheader("AI Suggested Code")
+            st.code(
+                result["fixed"],
+                language=st.session_state["code_fix_result_language"],
+            )
+
+        st.subheader("Code Changes")
+        st.code(
+            result["diff"] or "No changes suggested.",
+            language="diff",
+        )
+
+        st.subheader("Syntax Validation")
+
+        if result["syntax"] == "Valid Python syntax.":
+            st.success(result["syntax"])
+        elif result["syntax"].startswith("Syntax error"):
+            st.error(result["syntax"])
+        else:
+            st.info(result["syntax"])
+
+        st.subheader("AI Fix Explanation")
+
+        if st.button("Explain Changes", key="explain_code_fix"):
+            try:
+                with st.spinner("Generating explanation..."):
+                    explanation = explain_fix(
+                        result["original"],
+                        result["fixed"],
+                        st.session_state["code_fix_result_language"],
+                    )
+                    st.session_state["code_fix_explanation"] = explanation
+            except Exception as error:
+                st.error(f"Explanation failed: {error}")
+
+        if "code_fix_explanation" in st.session_state:
+            st.markdown(st.session_state["code_fix_explanation"])
+
+        extension = result["extension"]
+
+        st.download_button(
+            "Download Suggested Code",
+            data=result["fixed"],
+            file_name=f"fixed_code.{extension}",
+            mime="text/plain",
+            key="download_fixed_code",
+        )
+
+        st.warning(
+            "AI-generated code must be reviewed and tested "
+            "before production use."
+        )
+
+with st.expander("AI Unit Test Generator", expanded=False):
+
+    st.write(
+        "Generate pytest unit tests from Python source code."
+    )
+
+    module_name = st.text_input(
+        "Python module name (without .py)",
+        value="",
+        key="test_module_name",
+    )
+
+    test_source = st.text_area(
+        "Paste Python source code",
+        height=250,
+        key="test_generator_source",
+    )
+
+    if st.button(
+        "Generate Unit Tests",
+        key="generate_unit_tests_button",
+    ):
+        st.session_state.pop("generated_unit_tests", None)
+
+        if not test_source.strip():
+            st.warning("Please paste Python code first.")
+        else:
+            try:
+                with st.spinner("Generating pytest tests..."):
+                    result = generate_unit_tests(
+                        test_source,
+                        module_name.strip(),
+                    )
+
+                st.session_state["generated_unit_tests"] = result
+                st.success("Unit tests generated!")
+
+            except Exception as error:
+                st.error(f"Test generation failed: {error}")
+
+    if "generated_unit_tests" in st.session_state:
+
+        result = st.session_state["generated_unit_tests"]
+
+        st.subheader("Generated pytest Tests")
+
+        st.code(
+            result["test_code"],
+            language="python",
+        )
+
+        st.subheader("Syntax Validation")
+
+        if result["syntax_valid"]:
+            st.success(result["syntax_message"])
+        else:
+            st.error(result["syntax_message"])
+
+        st.download_button(
+            "Download Unit Tests",
+            data=result["test_code"],
+            file_name=result["file_name"],
+            mime="text/x-python",
+            key="download_generated_tests",
+        )
+
+        st.info(
+            "These tests are AI-generated and have not been "
+            "executed. Review them before running."
+        )
+
+with st.expander(" Multi-Language AI Unit Test Generator", expanded=False):
+
+    st.write(
+        "Generate AI-powered unit tests for Python, Java, "
+        "JavaScript, TypeScript and C#."
+    )
+
+    test_language = st.selectbox(
+        "Programming Language",
+        list(FRAMEWORKS.keys()),
+        key="multi_test_language",
+    )
+
+    framework, extension = FRAMEWORKS[test_language]
+
+    st.info(f"Testing Framework: {framework}")
+
+    module_name = st.text_input(
+        "Module / Class Name",
+        value="",
+        key="multi_test_module",
+    )
+
+    source_code = st.text_area(
+        "Paste Source Code",
+        height=250,
+        key="multi_test_source",
+    )
+
+    if st.button("Generate Tests", key="multi_generate_tests"):
+        st.session_state.pop("multi_test_result", None)
+
+        try:
+            if not source_code.strip():
+                st.warning("Please paste source code first.")
+            else:
+                with st.spinner("Generating unit tests..."):
+                    result = generate_tests(
+                        source_code,
+                        test_language,
+                        module_name.strip(),
+                    )
+
+                st.session_state["multi_test_result"] = result
+                st.success("Unit tests generated successfully!")
+
+        except Exception as error:
+            st.error(f"Test generation failed: {error}")
+
+    if "multi_test_result" in st.session_state:
+        result = st.session_state["multi_test_result"]
+
+        st.subheader("Generated Unit Tests")
+        st.caption(
+            f"Language: {result['language']} | "
+            f"Framework: {result['framework']}"
+        )
+
+        st.code(
+            result["test_code"],
+            language=result["language"].lower(),
+        )
+
+        st.download_button(
+            "Download Unit Test File",
+            data=result["test_code"],
+            file_name=result["filename"],
+            mime="text/plain",
+            key="multi_test_download",
+        )
+
+        st.warning(
+            "AI-generated tests have not been executed. "
+            "Review them and install the required test framework."
+        )
 
 
 st.subheader("Voice Assistant")
