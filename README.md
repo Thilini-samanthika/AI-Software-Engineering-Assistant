@@ -1,159 +1,272 @@
+
+<div align="center">
+
 #  AI Software Engineering Assistant
 
-> A Multi-Agent AI System for Software Developers built using **LangGraph, LangChain, RAG, ChromaDB, Groq LLM, and Streamlit**.
+### A Multi-Agent AI System for Software Developers
 
-![Python](https://img.shields.io/badge/Python-3.11-blue)
-![LangGraph](https://img.shields.io/badge/LangGraph-Multi--Agent-success)
-![Streamlit](https://img.shields.io/badge/Streamlit-Frontend-red)
+**An AI-powered developer assistant for coding, debugging, documentation, software architecture, code review, testing, and intelligent knowledge retrieval.**
+
+Built with **Python, LangGraph, LangChain, RAG, ChromaDB, Groq LLM, and Streamlit**.
+
+![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
+![LangGraph](https://img.shields.io/badge/LangGraph-Multi--Agent-purple)
+![LangChain](https://img.shields.io/badge/LangChain-AI_Framework-green)
+![Streamlit](https://img.shields.io/badge/Streamlit-Web_App-red?logo=streamlit)
 ![Groq](https://img.shields.io/badge/Groq-LLM-orange)
-![License](https://img.shields.io/badge/License-MIT-green)
+![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector_Database-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-Interview_Studio-009688?logo=fastapi)
 
----
-# Live demo link:
-https://ai-software-engineering-assistant-ngsqmt5gnqkl3sa2psvwks.streamlit.app/
+###  Live Application
 
----
+[**Launch AI Software Engineering Assistant**](https://ai-software-engineering-assistant-ngsqmt5gnqkl3sa2psvwks.streamlit.app/)
 
-#  Developer
+[GitHub Repository](https://github.com/Thilini-samanthika/AI-Software-Engineering-Assistant)
 
-**M.Thilini Samanthika** - **ITBIN-2313-0061**
-
-GitHub:
-https://github.com/Thilini-samanthika
+</div>
 
 ---
 
-#  Project Overview
+##  Project Overview
 
-AI Software Engineering Assistant is a Multi-Agent AI application that helps software developers with coding, debugging, software engineering concepts, documentation generation, architecture recommendations, code reviews, and intelligent documentation search using Retrieval-Augmented Generation (RAG).
+**AI Software Engineering Assistant** is a multi-agent AI application developed to support software developers with common software engineering activities.
 
-Instead of searching across multiple websites, developers can ask questions in one place and receive AI-powered answers.
+The application combines Large Language Models (LLMs), intelligent task routing, specialized AI agents, and Retrieval-Augmented Generation (RAG) to provide assistance with programming, debugging, documentation, architecture design, testing, and code review.
 
----
+Instead of switching between multiple resources, developers can access AI-powered assistance through a single Streamlit application.
 
-#  Features
+###  Project Objectives
 
--  Explain source code
--  Debug programming errors
--  Software engineering documentation search (RAG)
--  Generate README files
--  Generate API documentation
--  Generate Unit Tests
--  System Architecture Recommendations
--  AI Code Review
--  Upload PDF Knowledge Base
--  Search uploaded documents
--  Reflection Agent for answer improvement
+- Support software developers with AI-assisted programming.
+- Simplify code explanation and debugging.
+- Generate software engineering documentation.
+- Provide software architecture recommendations.
+- Improve access to technical knowledge through RAG.
+- Assist with unit testing and code reviews.
+- Explore multi-agent workflows using LangGraph.
+- Support technical interview preparation.
 
 ---
 
-#  Multi-Agent Architecture
+##  Key Features
 
+###  1. AI Coding Assistant
+
+- Explain source code.
+- Answer programming questions.
+- Identify potential programming errors.
+- Suggest debugging solutions.
+- Generate code examples.
+- Recommend code improvements.
+
+###  2. AI Documentation Generator
+
+- Generate README documentation.
+- Assist with API documentation.
+- Explain technical concepts.
+- Generate structured software documentation.
+
+###  3. Retrieval-Augmented Generation (RAG)
+
+- Search software engineering documentation.
+- Retrieve relevant technical information.
+- Upload PDF documents.
+- Search uploaded knowledge sources.
+- Generate responses using retrieved context.
+
+###  4. Software Architecture Assistant
+
+- Recommend software architectures.
+- Explain architecture patterns.
+- Suggest system components.
+- Support high-level system design decisions.
+
+###  5. AI Unit Test Generation
+
+- Generate suggested unit tests.
+- Identify common test scenarios.
+- Suggest edge cases.
+- Assist with testing across programming languages.
+
+###  6. AI Code Review
+
+- Review source code.
+- Identify potential code quality issues.
+- Suggest refactoring opportunities.
+- Recommend maintainability improvements.
+
+###  7. Multi-Agent AI System
+
+The application uses specialized agents to handle different software engineering tasks.
+
+Key components include:
+
+- Router Agent
+- Coding Agent
+- Documentation Agent
+- RAG Agent
+- Testing Agent
+- Architecture Agent
+- Code Review Agent
+- Reflection Agent
+
+###  8. GitHub Repository Analysis
+
+- Analyze repository structure.
+- Explore source code organization.
+- Assist with understanding unfamiliar codebases.
+- Suggest potential improvements.
+
+###  9. Voice Assistant
+
+- Voice-based interaction.
+- Speech recognition.
+- Text-to-speech responses.
+- Conversational AI assistance.
+
+Voice functionality depends on microphone permissions and supported speech technologies.
+
+###  10. AI Live Interview Studio
+
+A separate browser-based interview practice environment.
+
+**Interview Modes:**
+
+- Mock Interview
+- Guided Coaching
+- HR Interview
+- Technical Interview
+
+**Technologies:**
+
+- FastAPI
+- WebSockets
+- Browser Speech Recognition
+- Speech Synthesis
+- Groq LLM
+
+The Interview Studio runs as a separate local service.
+
+---
+
+##  Multi-Agent Architecture
+
+The application uses a router to direct requests toward specialized AI agents.
+
+```text
+                         USER
+                           |
+                           v
+                    STREAMLIT UI
+                           |
+                           v
+                     ROUTER AGENT
+                           |
+         +-----------------+-----------------+
+         |                 |                 |
+         v                 v                 v
+    CODING AGENT    DOCUMENTATION AGENT   RAG AGENT
+         |                 |                 |
+         v                 v                 v
+    TESTING AGENT   ARCHITECTURE AGENT   CHROMADB
+         |
+         v
+    CODE REVIEW AGENT
+         |
+         v
+    REFLECTION AGENT
+         |
+         v
+     FINAL RESPONSE
 ```
-                  User
-                    │
-             Streamlit UI
-                    │
-             Router Agent
-                    │
-    ┌────────┬──────────┬─────────────┐
-    │        │          │             │
- Coding   Documentation  RAG   Architecture
- Agent      Agent       Agent      Agent
-    │
- Testing Agent
-    │
- Code Review Agent
-    │
- Reflection Agent
-    │
-          Final Response
-```
-
 ---
 
-#  Agent Overview
+##  Agent Responsibilities
 
 | Agent | Responsibility |
-|--------|---------------|
-| Router Agent | Selects the correct agent |
-| Coding Agent | Code explanation & debugging |
-| Documentation Agent | README & API documentation |
-| RAG Agent | Searches knowledge base |
-| Testing Agent | Generates unit tests |
-| Architecture Agent | Recommends software architecture |
-| Code Review Agent | Reviews code quality |
-| Reflection Agent | Improves final response |
+|---|---|
+| Router Agent | Selects an appropriate agent for the task |
+| Coding Agent | Code explanation and debugging |
+| Documentation Agent | README and API documentation generation |
+| RAG Agent | Knowledge base retrieval |
+| Testing Agent | Unit test generation |
+| Architecture Agent | Software architecture recommendations |
+| Code Review Agent | Code quality analysis |
+| Reflection Agent | Response evaluation and improvement |
 
 ---
 
-#  Knowledge Base
+##  RAG Knowledge Base
 
-The assistant uses a ChromaDB vector database containing software engineering documentation.
+The RAG system uses **ChromaDB** for vector-based knowledge retrieval.
 
-Current documents include:
+The project's software engineering knowledge base covers topics such as:
 
-- Python
-- Java
-- C#
-- SQL
-- SOLID Principles
-- Object-Oriented Programming
-- Design Patterns
-- Clean Code
-- REST API
-- Git
-- GitHub
-- Docker
-- Kubernetes
-- Agile
-- Scrum
-- CI/CD
-- Microservices
-- Refactoring
-- Software Architecture
-- Unit Testing
+| Category | Topics |
+|---|---|
+| Programming | Python, Java, C#, SQL |
+| Software Design | SOLID Principles, OOP, Design Patterns |
+| Code Quality | Clean Code, Refactoring |
+| Backend Development | REST API, Microservices |
+| Version Control | Git, GitHub |
+| DevOps | Docker, Kubernetes, CI/CD |
+| Project Management | Agile, Scrum |
+| Architecture | Software Architecture |
+| Testing | Unit Testing |
 
----
+### RAG Processing Workflow
 
-#  Technologies Used
-
-## Frontend
-
-- Streamlit
-
-## Backend
-
-- Python
-
-## AI Framework
-
-- LangGraph
-- LangChain
-
-## Large Language Model
-
-- Groq (Llama 3)
-
-## Vector Database
-
-- ChromaDB
-
-## Embeddings
-
-- Sentence Transformers
-
-## Document Loader
-
-- PyPDFLoader
-
----
-
-#  Project Structure
-
+```text
+PDF Documents
+      |
+      v
+Document Loading
+      |
+      v
+Text Splitting
+      |
+      v
+Sentence Transformer Embeddings
+      |
+      v
+ChromaDB Vector Storage
+      |
+      v
+Relevant Document Retrieval
+      |
+      v
+Groq LLM
+      |
+      v
+Context-Aware Response
 ```
-AI-Software-Engineering-Assistant/
 
+---
+
+##  Technology Stack
+
+| Component | Technology |
+|---|---|
+| Programming Language | Python 3.11 |
+| Frontend | Streamlit |
+| AI Workflow | LangGraph |
+| LLM Framework | LangChain |
+| LLM Provider | Groq |
+| Vector Database | ChromaDB |
+| Embeddings | Sentence Transformers |
+| PDF Processing | PyPDFLoader |
+| Interview Backend | FastAPI |
+| Real-Time Communication | WebSockets |
+| Voice Interaction | Speech Recognition, Text-to-Speech |
+| Version Control | Git, GitHub |
+| IDE | Visual Studio Code |
+
+---
+
+##  Project Structure
+
+```text
+AI-Software-Engineering-Assistant/
 │
 ├── agents/
 │   ├── router.py
@@ -180,6 +293,14 @@ AI-Software-Engineering-Assistant/
 │   ├── vector_store.py
 │   └── upload_loader.py
 │
+├── interview_studio/
+│   ├── __init__.py
+│   ├── index.html
+│   └── server.py
+│
+├── services/
+├── tests/
+│
 ├── data/
 │   ├── pdfs/
 │   └── uploads/
@@ -187,128 +308,251 @@ AI-Software-Engineering-Assistant/
 ├── assets/
 │
 ├── app.py
+├── config.py
 ├── requirements.txt
-├── README.md
-└── .env
+├── .gitignore
+└── README.md
 ```
+
+*The structure above summarizes the project's documented modules and recent additions. Refer to the repository for the exact current file tree.*
 
 ---
 
-#  Installation
+##  Installation Guide
 
-Clone the repository
+### Prerequisites
+
+- Python 3.11
+- Git
+- Visual Studio Code or another IDE
+- Groq API key
+- Internet connection
+
+### Step 1 — Clone Repository
 
 ```bash
 git clone https://github.com/Thilini-samanthika/AI-Software-Engineering-Assistant.git
 ```
 
-Go to the project
-
 ```bash
 cd AI-Software-Engineering-Assistant
 ```
 
-Create virtual environment
+### Step 2 — Create Virtual Environment
 
 ```bash
-python -m venv venv
+python -m venv .venv
 ```
 
-Activate virtual environment
+Activate on Windows PowerShell:
 
-Windows
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+For Linux/macOS:
 
 ```bash
-venv\Scripts\activate
+source .venv/bin/activate
 ```
 
-Install dependencies
+### Step 3 — Install Dependencies
 
 ```bash
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
+
+### Step 4 — Configure Environment Variables
+
+Create a `.env` file in the project root.
+
+```env
+GROQ_API_KEY=your_groq_api_key_here
+```
+
+If your configuration uses OpenRouter, also set:
+
+```env
+OPENROUTER_API_KEY=your_openrouter_api_key_here
+```
+
+**Never upload real API keys to GitHub.**
+
+### Step 5 — Run Streamlit Application
+
+```bash
+python -m streamlit run app.py
+```
+
+Open:
+
+http://localhost:8501
 
 ---
 
-#  Environment Variables
+## 🎤Running the AI Live Interview Studio
 
-Create a `.env` file.
+The Live Interview Studio runs independently from the main Streamlit application.
 
-```
-GROQ_API_KEY=your_api_key
-OPENROUTER_API_KEY=your_api_key
-```
+Open another terminal and activate the virtual environment.
 
----
-
-#  Run the Project
+Run:
 
 ```bash
-streamlit run app.py
+python -m uvicorn interview_studio.server:app --host 127.0.0.1 --port 8765
 ```
+
+Open:
+
+http://127.0.0.1:8765
+
+### Interview Studio Requirements
+
+- Supported web browser
+- Microphone access
+- Internet connection for AI responses
+- Configured Groq API key
+---
+
+##  Application Screenshots
+
+### Home Page
+
+<img width="400" height="200" alt="image" src="https://github.com/user-attachments/assets/94adb173-5aa4-4b80-98af-570a8f435d83" />
+
+
+### Chat Interface
+
+<img width="400" height="200" alt="image" src="https://github.com/user-attachments/assets/dee72c91-dc7f-4859-9e20-b983712d80d5" />
+
+
+### RAG Search
+
+<img width="700" height="88" alt="image" src="https://github.com/user-attachments/assets/d21fb4f3-89e1-4b72-bac4-53459f7a7aa8" />
+
+
+### PDF Upload
+
+<img width="200" height="400" alt="PDF Knowledge Base Upload" src="https://github.com/user-attachments/assets/24beaca4-9c3e-47dd-b48b-748fbab037bd" />
 
 ---
 
-#  Application Screenshots
+##  Example Questions
 
-Add screenshots here.
+### Programming
 
-- Home Page
-  
-<img width="400" height="200" alt="Screenshot 2026-07-26 151559" src="https://github.com/user-attachments/assets/40aa5952-6789-4922-a343-61736040bd1d" />
-
-
-- Chat Interface
-  
-<img width="400" height="200" alt="Screenshot 2026-07-26 150713" src="https://github.com/user-attachments/assets/68a02a9a-d21c-4467-a6e9-a37210fe57ac" />
-
-
-- RAG Search
-  
-<img width="700" height="100" alt="Screenshot 2026-07-26 150943" src="https://github.com/user-attachments/assets/66fd5958-40ff-479d-a151-37cc53b75f0d" />
-
-
-- PDF Upload
-  
-<img width="200" height="400" alt="Screenshot 2026-07-26 150818" src="https://github.com/user-attachments/assets/24beaca4-9c3e-47dd-b48b-748fbab037bd" />
-
----
-
-#  Example Questions
-
-```
+```text
 Explain SOLID principles.
 
 Review this Python code.
 
+Debug this Java program.
+```
+
+### Documentation
+
+```text
 Generate a README for my project.
 
-Generate unit tests for this function.
+Generate API documentation.
+```
 
+### Testing
+
+```text
+Generate unit tests for this function.
+```
+
+### Architecture
+
+```text
 Design a Hospital Management System.
 
 Explain the Repository Pattern.
+```
 
+### RAG
+
+```text
 Search Docker documentation.
 
 Summarize the uploaded PDF.
 ```
 
+### Interview Preparation
+
+```text
+Conduct a mock Software Engineering Internship interview.
+```
+
 ---
 
-#  Future Improvements
+## Security
 
-- Voice Assistant
+- Store API keys in environment variables.
+- Do not commit `.env` files.
+- Keep uploaded documents and local vector databases private.
+- Avoid hardcoding credentials.
+- Review AI-generated code before execution.
+- Validate generated tests.
+- Do not upload confidential source code without permission.
+
+---
+
+##  Limitations
+
+- AI-generated responses may contain errors.
+- Cloud-based LLM features require internet access.
+- API rate limits may apply.
+- Generated code requires developer review.
+- Browser speech recognition support varies.
+- The Live Interview Studio requires a separate server.
+- Some advanced AI workflows may require further testing and refinement.
+
+---
+
+##  Future Improvements
+
 - AI Pair Programming
+- Enhanced Multi-Agent Collaboration
+- Improved GitHub Repository Analysis
 - Multiple LLM Support
-- Code Execution Sandbox
+- Secure Code Execution Sandbox
 - UML Diagram Generation
 - Database Schema Generator
 - Docker Deployment
-- Authentication
+- User Authentication
+- CI/CD Automation
 
 ---
 
-#  License
+##  Developer
 
-This project is developed for educational purposes and internship portfolio demonstrations.
+**M. Thilini Samanthika**
+
+BSc (Hons) in Information Technology Undergraduate
+
+**Areas of Interest:**
+Software Engineering, Artificial Intelligence, Backend Development, and DevOps.
+
+**GitHub:** [Thilini-samanthika](https://github.com/Thilini-samanthika)
+
+**Repository:** [AI Software Engineering Assistant](https://github.com/Thilini-samanthika/AI-Software-Engineering-Assistant)
+
+---
+
+##  Project Purpose
+
+This project was developed for educational purposes, practical exploration of AI technologies, and software engineering portfolio demonstrations.
+
+---
+
+<div align="center">
+
+###  AI Software Engineering Assistant
+
+**Exploring Intelligent Software Development Through Multi-Agent AI**
+
+If you find this project useful, consider giving it a star!
+
+</div>
